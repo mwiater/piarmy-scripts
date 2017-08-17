@@ -1,0 +1,153 @@
+# `docker stack deploy -c piarmy-stack.yml piarmy`
+
+version: '3'
+
+services:
+  webserver:
+    image: mattwiater/piarmy-webserver:latest
+    ports:
+      - 0.0.0.0:80:80
+    networks:
+      - piarmy
+    hostname: piarmy-webserver
+    deploy:
+      mode: global
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+
+  lambda:
+    image: mattwiater/piarmy-lambda:latest
+    ports:
+      - 0.0.0.0:8002:80
+    networks:
+      - piarmy
+    hostname: piarmy-lambda
+    deploy:
+      mode: global
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+
+  minio1:
+    image: pixelchrome/minio-arm:latest
+    volumes:
+      - /media/usb/export:/export
+    ports:
+      - "9001:9000"
+    networks:
+      - piarmy
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy01
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    command: server http://minio1/export http://minio2/export http://minio3/export http://minio4/export
+    environment:
+      MINIO_ACCESS_KEY: piarmyPIARMY
+      MINIO_SECRET_KEY: PIARMYpiarmy
+
+  minio2:
+    image: pixelchrome/minio-arm:latest
+    volumes:
+      - /media/usb/export:/export
+    ports:
+      - "9002:9000"
+    networks:
+      - piarmy
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy02
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    command: server http://minio1/export http://minio2/export http://minio3/export http://minio4/export
+    environment:
+      MINIO_ACCESS_KEY: piarmyPIARMY
+      MINIO_SECRET_KEY: PIARMYpiarmy
+
+  minio3:
+    image: pixelchrome/minio-arm:latest
+    volumes:
+      - /media/usb/export:/export
+    ports:
+      - "9003:9000"
+    networks:
+      - piarmy
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy03
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    command: server http://minio1/export http://minio2/export http://minio3/export http://minio4/export
+    environment:
+      MINIO_ACCESS_KEY: piarmyPIARMY
+      MINIO_SECRET_KEY: PIARMYpiarmy
+
+  minio4:
+    image: pixelchrome/minio-arm:latest
+    volumes:
+      - /media/usb/export:/export
+    ports:
+      - "9004:9000"
+    networks:
+      - piarmy
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy04
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    command: server http://minio1/export http://minio2/export http://minio3/export http://minio4/export
+    environment:
+      MINIO_ACCESS_KEY: piarmyPIARMY
+      MINIO_SECRET_KEY: PIARMYpiarmy
+
+  minio-client:
+    image: mattwiater/piarmy-minio-client:latest
+    networks:
+      - piarmy
+    hostname: piarmy-minio-client
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+
+  collector:
+    image: mattwiater/piarmy-collector:latest
+    ports:
+      - 0.0.0.0:8000:80
+      - 0.0.0.0:8001:81
+    networks:
+      - piarmy
+    volumes:
+      - /home/pi/images/piarmy-collector/containerFiles:/home/collector
+    hostname: piarmy-collector
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+
+networks:  
+  piarmy:
+    external: true
