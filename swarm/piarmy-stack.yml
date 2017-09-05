@@ -115,20 +115,6 @@ services:
       MINIO_ACCESS_KEY: piarmyPIARMY
       MINIO_SECRET_KEY: PIARMYpiarmy
 
-  minio-client:
-    image: mattwiater/piarmy-minio-client:latest
-    networks:
-      - piarmy
-    hostname: piarmy-minio-client
-    deploy:
-      placement:
-        constraints:
-          - node.role == manager
-      restart_policy:
-        delay: 10s
-        max_attempts: 10
-        window: 60s
-
   collector:
     image: mattwiater/piarmy-collector:latest
     ports:
