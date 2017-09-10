@@ -25,7 +25,7 @@ services:
       - piarmy
     hostname: piarmy-lambda
     deploy:
-      mode: global
+      replicas: 4
       restart_policy:
         delay: 10s
         max_attempts: 10
