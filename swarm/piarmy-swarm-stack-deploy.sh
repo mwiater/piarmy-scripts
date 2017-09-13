@@ -15,8 +15,6 @@
 
 clear
 
-#ps -ef | grep "collector.sh" | grep -v grep | awk '{print $2}' | xargs kill -9
-
-#(sh /home/pi/images/piarmy-collector/collector.sh &) > /dev/null 2>&1
+docker stack rm piarmy
 docker stack deploy -c piarmy-stack.yml piarmy
 docker service ls
