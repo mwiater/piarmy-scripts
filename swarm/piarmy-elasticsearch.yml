@@ -1,0 +1,47 @@
+# `docker stack deploy -c piarmy-elasticsearch.yml elasticsearch`
+
+version: '3'
+
+services:
+
+  piarmy-es-server:
+    image: mattwiater/piarmy-elasticsearch-server:latest
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy04
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    command: /bin/bash /home/start.sh
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - piarmy
+    volumes:
+      - /data:/var/lib/elasticsearch
+
+  piarmy-es-kibana:
+    image: mattwiater/piarmy-elasticsearch-kibana:latest
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy04
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    ports:
+      - "5601:5601"
+    networks:
+      - piarmy
+
+networks:  
+  piarmy:
+    external: true
+
+volumes:
+  data:
+    driver: local
