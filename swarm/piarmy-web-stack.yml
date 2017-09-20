@@ -1,0 +1,55 @@
+# `docker stack deploy -c /home/pi/projects/piarmy-scripts/swarm/piarmy-web-stack.yml piarmy`
+
+version: '3'
+
+services:
+  webserver:
+    image: mattwiater/piarmy-webserver:latest
+    ports:
+      - 0.0.0.0:80:80
+    networks:
+      - piarmy
+    hostname: piarmy-webserver
+    deploy:
+      replicas: 4
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+
+  lambda:
+    image: mattwiater/piarmy-lambda:latest
+    ports:
+      - 0.0.0.0:8002:80
+    networks:
+      - piarmy
+    hostname: piarmy-lambda
+    deploy:
+      replicas: 4
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+
+  collector:
+    image: mattwiater/piarmy-collector:latest
+    ports:
+      - 0.0.0.0:8000:80
+      - 0.0.0.0:8001:81
+    networks:
+      - piarmy
+    volumes:
+      - /home/pi/images/piarmy-collector/containerFiles:/home/collector
+    hostname: piarmy-collector
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+
+networks:  
+  piarmy:
+    external: true
