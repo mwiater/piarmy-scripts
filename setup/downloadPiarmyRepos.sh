@@ -6,11 +6,11 @@
 #
 
 cd /home/pi/images
-git clone git@github.com:piarmy/piarmy-elasticsearch-cluster.git
+git clone git@github.com:piarmy/piarmy-webserver.git
 git clone git@github.com:piarmy/piarmy-lambda.git
 git clone git@github.com:piarmy/piarmy-collector.git
 git clone git@github.com:piarmy/piarmy-resque-stack.git
-git clone git@github.com:piarmy/piarmy-webserver.git
+git clone git@github.com:piarmy/piarmy-elasticsearch-cluster.git
 
 cd /home/pi/projects
 git clone git@github.com:piarmy/piarmy-scripts.git

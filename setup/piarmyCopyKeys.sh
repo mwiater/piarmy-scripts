@@ -4,13 +4,12 @@
 #
 # Execute: bash -c "$(wget -O - https://raw.githubusercontent.com/piarmy/piarmy-scripts/master/setup/piarmyCopyKeys.sh)"
 
-# Notes: sudo apt-get install sshpass
 # export DOCKER_SWARM_PASSWORD="mypassword!"
 # Use: sshpass -p ${DOCKER_SWARM_PASSWORD} ssh-copy-id -i /home/pi/.ssh/id_rsa.pub pi@piarmy04
 
 clear
 
-password="xxx"
+password=$DOCKER_SWARM_PASSWORD
 
 ####################
 # Config
@@ -19,38 +18,37 @@ password="xxx"
 hostname=$(hostname)
 
 nodes=( piarmy01 piarmy02 piarmy03 piarmy04 )
-#newNodes=()
+newNodes=()
 
 # Check to see if hosts are reachable at .local instead of bare domain
-#for node in "${nodes[@]}"
-#do
-#  if [ "${hostname}" != "${node}" ] ; then
-#    if ping -c 1 $node &> /dev/null
-#    then
-#      newNodes+=($node)
-#    else
-#      if ping -c 1 "${node}.local" &> /dev/null
-#      then
-#        newNodes+=("${node}.local")
-#      else
-#        newNodes+=($node)
-#      fi
-#    fi
-#  else
-#    if ping -c 1 "${node}.local" &> /dev/null
-#    then
-#      newNodes+=("${node}.local")
-#    else
-#      newNodes+=($node)
-#    fi
-#  fi
-#
-#done
+for node in "${nodes[@]}"
+do
+  if [ "${hostname}" != "${node}" ] ; then
+    if ping -c 1 $node &> /dev/null
+    then
+      newNodes+=($node)
+    else
+      if ping -c 1 "${node}.local" &> /dev/null
+      then
+        newNodes+=("${node}.local")
+      else
+        newNodes+=($node)
+      fi
+    fi
+  else
+    if ping -c 1 "${node}.local" &> /dev/null
+    then
+      newNodes+=("${node}.local")
+    else
+      newNodes+=($node)
+    fi
+  fi
 
+done
 
 ####################
 # Copy ssh keys
-for node in "${nodes[@]}"
+for node in "${newNodes[@]}"
 do
   if [ "${hostname}" != "${node}" ] ; then
 
