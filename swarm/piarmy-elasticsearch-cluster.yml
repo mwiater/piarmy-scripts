@@ -1,0 +1,85 @@
+# `docker stack deploy -c /home/pi/projects/piarmy-scripts/swarm/piarmy-elasticsearch-cluster.yml elasticsearch`
+
+version: '3'
+
+services:
+
+  elasticsearch-node-01:
+    image: mattwiater/piarmy-elasticsearch-cluster:latest
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy02
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    command: /bin/bash /home/start.sh
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - piarmy
+    volumes:
+      - /elasticsearch-cluster-data:/var/lib/elasticsearch
+
+  elasticsearch-node-02:
+    image: mattwiater/piarmy-elasticsearch-cluster:latest
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy03
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    command: /bin/bash /home/start.sh
+    ports:
+      - "9201:9200"
+      - "9301:9300"
+    networks:
+      - piarmy
+    volumes:
+      - /elasticsearch-cluster-data:/var/lib/elasticsearch
+
+  elasticsearch-node-03:
+    image: mattwiater/piarmy-elasticsearch-cluster:latest
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy04
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    command: /bin/bash /home/start.sh
+    ports:
+      - "9202:9200"
+      - "9302:9300"
+    networks:
+      - piarmy
+    volumes:
+      - /elasticsearch-cluster-data:/var/lib/elasticsearch
+
+  kibana:
+    image: mattwiater/piarmy-elasticsearch-kibana-cluster:latest
+    deploy:
+      placement:
+        constraints:
+          - node.labels.name == piarmy01
+      restart_policy:
+        delay: 10s
+        max_attempts: 10
+        window: 60s
+    ports:
+      - "5601:5601"
+    networks:
+      - piarmy
+
+networks:  
+  piarmy:
+    external: true
+
+volumes:
+  data:
+    driver: local

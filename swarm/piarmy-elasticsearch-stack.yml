@@ -1,10 +1,10 @@
-# `docker stack deploy -c /home/pi/projects/piarmy-scripts/swarm/piarmy-elasticsearch-stack.yml piarmy`
+# `docker stack deploy -c /home/pi/projects/piarmy-scripts/swarm/piarmy-elasticsearch-stack.yml elasticsearch`
 
 version: '3'
 
 services:
 
-  elasticsearch:
+  server:
     image: mattwiater/piarmy-elasticsearch-server:latest
     deploy:
       placement:

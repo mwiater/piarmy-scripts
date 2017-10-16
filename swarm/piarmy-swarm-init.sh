@@ -2,7 +2,7 @@
 ####################
 # PiArmy Swarm Init
 #
-# Execute: wget -O- https://raw.githubusercontent.com/piarmy/piarmy-scripts/master/swarm/piarmy-swarm-init.sh | sh
+# Execute: bash -c "$(wget -O - https://raw.githubusercontent.com/piarmy/piarmy-scripts/master/swarm/piarmy-swarm-init.sh)"
 # Test: Portainer
 # http://{{hostname}}:5000
 # Create PWD
