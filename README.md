@@ -2,6 +2,8 @@
 
 ### Script [approx 40m for 4 Pis]
 
+UPDATE: Can follow this instead of etcher: https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#2-prepare-the-sd-card
+
 1. Etcher.io: burn image [approx 2m 30s]
 2. Save Empty ssh file on /boot
 3. Login: `ssh pi@raspberrypi`, password `raspberry`
